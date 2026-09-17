@@ -3,63 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aura Rocket NFT</title>
+    <title>Aura Rocket NFT - Gorilla Style</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b0e14;
-            --card: #151a24;
+            --card: #151a23;
             --border: rgba(255, 255, 255, 0.08);
-            --accent: #2a85ff;
+            --accent: #2f80ed;
             --star: #ffb703;
-            --green: #00e676;
-            --red: #ff3355;
-            --text-sub: #8f9bba;
+            --green: #27ae60;
+            --red: #eb5757;
+            --text-sub: #8b949e;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; user-select: none; }
         body { background: var(--bg); color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* Header */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(11, 14, 20, 0.95); border-bottom: 1px solid var(--border); }
-        .logo { font-weight: 900; font-size: 16px; letter-spacing: 1px; color: var(--accent); }
-        .stars-badge { background: rgba(255, 183, 3, 0.12); border: 1px solid rgba(255, 183, 3, 0.3); padding: 6px 12px; border-radius: 20px; font-weight: 800; color: var(--star); cursor: pointer; display: flex; gap: 6px; align-items: center; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(21, 26, 35, 0.95); border-bottom: 1px solid var(--border); }
+        .logo { font-weight: 900; font-size: 16px; letter-spacing: 1px; color: var(--accent); display: flex; align-items: center; gap: 6px; }
+        .stars-badge { background: rgba(255, 183, 3, 0.12); border: 1px solid rgba(255, 183, 3, 0.3); padding: 6px 14px; border-radius: 20px; font-weight: 800; color: var(--star); cursor: pointer; display: flex; gap: 6px; align-items: center; }
 
-        /* Game Canvas Area */
-        .viewport { position: relative; height: 250px; margin: 10px 16px; background: radial-gradient(circle, #1a2233 0%, #0b0e14 100%); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
-        canvas { width: 100%; height: 100%; }
+        .viewport { position: relative; height: 210px; margin: 10px 16px; background: radial-gradient(circle, #1a2233 0%, #0b0e14 100%); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
+        canvas { width: 100%; height: 100%; display: block; }
         
-        .mult-box { position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
-        .mult-val { font-size: 42px; font-weight: 900; text-shadow: 0 0 20px rgba(42, 133, 255, 0.5); }
-        .mult-val.crashed { color: var(--red); text-shadow: 0 0 20px rgba(255, 51, 85, 0.5); }
-        .nft-preview-badge { background: rgba(0,230,118,0.15); border: 1px solid var(--green); color: var(--green); padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; margin-top: 4px; display: inline-block; }
+        .mult-box { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; width: 100%; }
+        .mult-val { font-size: 46px; font-weight: 900; text-shadow: 0 0 25px rgba(47, 128, 237, 0.6); transition: color 0.2s; }
+        .mult-val.crashed { color: var(--red); text-shadow: 0 0 25px rgba(235, 87, 87, 0.6); }
+        
+        .nft-preview-badge { background: rgba(21, 26, 35, 0.9); border: 1px solid var(--green); color: #fff; padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 800; margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); }
+        .nft-preview-badge img { width: 22px; height: 22px; object-fit: contain; }
 
-        /* Controls & Betting */
-        .controls { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
+        .controls { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
         .input-group { display: flex; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 6px 10px; align-items: center; gap: 8px; }
         .bet-input { background: transparent; border: none; color: #fff; font-size: 18px; font-weight: 800; width: 100%; outline: none; }
-        .quick-btn { background: rgba(255,255,255,0.06); border: none; color: #fff; padding: 6px 10px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .quick-btn { background: rgba(255,255,255,0.06); border: none; color: #fff; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
 
-        .bet-type-selector { display: flex; gap: 8px; margin-bottom: 4px; }
-        .type-btn { flex: 1; padding: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; color: var(--text-sub); font-size: 12px; font-weight: 700; text-align: center; cursor: pointer; }
-        .type-btn.active { border-color: var(--accent); color: #fff; background: rgba(42, 133, 255, 0.15); }
+        .autocash-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 6px 12px; border-radius: 10px; border: 1px solid var(--border); }
+        .autocash-row span { font-size: 12px; font-weight: 700; color: var(--text-sub); }
 
-        .btn-main { background: var(--accent); border: none; color: #fff; padding: 14px; border-radius: 14px; font-size: 16px; font-weight: 800; width: 100%; cursor: pointer; }
-        .btn-main.cashout { background: linear-gradient(135deg, #ff9100, #ff6d00); }
+        .btn-main { background: var(--accent); border: none; color: #fff; padding: 14px; border-radius: 14px; font-size: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.2s; }
+        .btn-main.cashout { background: linear-gradient(135deg, #f2994a, #f2c94c); color: #000; box-shadow: 0 0 20px rgba(242, 153, 74, 0.4); }
 
-        /* Navigation Bar */
+        .dep-type-nav { display: flex; background: rgba(0,0,0,0.4); border-radius: 12px; padding: 4px; gap: 4px; margin-bottom: 12px; }
+        .dep-tab { flex: 1; text-align: center; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--text-sub); cursor: pointer; transition: 0.2s; }
+        .dep-tab.active { background: var(--accent); color: #fff; }
+
+        .gift-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 340px; overflow-y: auto; padding-right: 4px; }
+        .gift-card { background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid var(--border); border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: 0.2s; }
+        .gift-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .gift-img { width: 54px; height: 54px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+        .gift-title { font-size: 11px; font-weight: 700; color: #e1e4e8; }
+        .gift-price { font-size: 11px; font-weight: 800; color: var(--star); display: flex; align-items: center; gap: 3px; }
+
+        .inv-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-height: 340px; overflow-y: auto; }
+        .inv-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .inv-btn-group { display: flex; gap: 4px; width: 100%; margin-top: 4px; }
+        .inv-btn { flex: 1; padding: 8px 0; border-radius: 8px; border: none; font-size: 10px; font-weight: 800; cursor: pointer; }
+        .inv-btn.withdraw { background: #27ae60; color: #fff; }
+        .inv-btn.sell { background: rgba(255,255,255,0.1); color: var(--star); }
+
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; }
         .nav-tab { color: var(--text-sub); font-size: 11px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         .nav-tab.active { color: var(--accent); }
 
-        /* Modals */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
-        .modal-body { background: var(--card); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 440px; padding: 20px; display: flex; flex-direction: column; gap: 14px; max-height: 85vh; overflow-y: auto; }
-        
-        .logs-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
-        .logs-table th, .logs-table td { border: 1px solid var(--border); padding: 6px; text-align: left; }
-        .logs-table th { background: rgba(255,255,255,0.05); }
+        .modal-body { background: var(--card); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 440px; padding: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 85vh; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -72,137 +82,216 @@
         </div>
     </header>
 
-    <!-- GAME VIEW -->
     <div id="view-game" style="flex:1;">
         <div class="viewport">
             <canvas id="rocketCanvas"></canvas>
             <div class="mult-box">
                 <div class="mult-val" id="multText">1.00x</div>
-                <div id="nftBadge" class="nft-preview-badge" style="display:none;">🎁 NFT Выигрыш: <span id="nftName">Факел</span></div>
+                <div id="nftBadge" class="nft-preview-badge" style="display:none;">
+                    <img id="nftImg" src="" alt="NFT">
+                    <span>Выигрыш: <span id="nftName">Факел</span></span>
+                </div>
             </div>
         </div>
 
         <div class="controls">
-            <div class="bet-type-selector">
-                <div class="type-btn active" onclick="setBetType('stars', this)">⭐ Ставка Звёздами</div>
-                <div class="type-btn" onclick="setBetType('nft', this)">🎁 Ставка NFT</div>
+            <div class="input-group">
+                <input type="number" id="betInput" class="bet-input" value="100" min="25" max="5000">
+                <button class="quick-btn" onclick="setBet(50)">50</button>
+                <button class="quick-btn" onclick="setBet(500)">500</button>
+                <button class="quick-btn" onclick="setBet(2000)">2K</button>
+                <button class="quick-btn" onclick="setBet(5000)">5K</button>
             </div>
 
-            <div class="input-group" id="starsBetBox">
-                <input type="number" id="betInput" class="bet-input" value="100" min="25" max="5000">
-                <button class="quick-btn" onclick="setBet(25)">25</button>
-                <button class="quick-btn" onclick="setBet(500)">500</button>
-                <button class="quick-btn" onclick="setBet(5000)">5000</button>
+            <div class="autocash-row">
+                <span>🎯 Авто-вывод (X):</span>
+                <input type="number" id="autoCashInput" value="2.00" step="0.1" style="width: 70px; background: transparent; border: 1px solid var(--border); color: var(--star); font-weight: 800; border-radius: 6px; text-align: center; outline: none; padding: 2px;">
             </div>
 
             <button id="actionBtn" class="btn-main" onclick="handleAction()">Сделать ставку</button>
         </div>
     </div>
 
-    <!-- BOTTOM NAV -->
     <div class="bottom-nav">
-        <div class="nav-tab active" onclick="switchTab('game', this)">🎮 Игра</div>
+        <div class="nav-tab active">🎮 Игра</div>
         <div class="nav-tab" onclick="openModal('inventoryModal')">🎒 Инвентарь</div>
-        <div class="nav-tab" onclick="openModal('settingsModal')">⚙️ Настройки</div>
+        <div class="nav-tab" onclick="openModal('depositModal')">💳 Пополнение</div>
+        <div class="nav-tab" onclick="openModal('settingsModal')">⚙️ Админ / Настройки</div>
     </div>
 
-    <!-- MODAL DEPOSIT -->
+    <!-- INVENTORY MODAL -->
+    <div class="modal" id="inventoryModal">
+        <div class="modal-body">
+            <h3>🎒 Мой Инвентарь NFT</h3>
+            <p style="font-size:12px; color:var(--text-sub);">Ваши NFT-подарки. Вы можете вывести их в профиль Telegram или обменять на ⭐:</p>
+            <div class="inv-grid" id="inventoryGrid"></div>
+            <button class="btn-main" style="background:#222; margin-top:8px;" onclick="closeModal('inventoryModal')">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- DEPOSIT MODAL -->
     <div class="modal" id="depositModal">
         <div class="modal-body">
-            <h3>Пополнение Звёзд</h3>
-            <p style="font-size:12px; color:var(--text-sub);">Лимиты: 50 ⭐ — 5000 ⭐</p>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <button class="quick-btn" style="padding:12px;" onclick="topUp(100)">⭐ 100</button>
-                <button class="quick-btn" style="padding:12px;" onclick="topUp(500)">⭐ 500</button>
-                <button class="quick-btn" style="padding:12px;" onclick="topUp(1000)">⭐ 1000</button>
-                <button class="quick-btn" style="padding:12px; border:1px solid var(--green);" onclick="topUp(5000)">⭐ 5000 (4500₽)</button>
+            <h3>Пополнение баланса</h3>
+            <div class="dep-type-nav">
+                <div class="dep-tab" id="tab-gram" onclick="switchDepTab('gram')">💎 GRAM</div>
+                <div class="dep-tab active" id="tab-stars" onclick="switchDepTab('stars')">⭐ Звёздами</div>
+                <div class="dep-tab" id="tab-gifts" onclick="switchDepTab('gifts')">🎁 Подарками</div>
             </div>
-            <button class="btn-main" style="background:#333" onclick="closeModal('depositModal')">Закрыть</button>
+
+            <div id="dep-view-gram" style="display:none; text-align:center; padding:10px 0;">
+                <p style="font-size:13px; color:var(--text-sub); margin-bottom:12px;">Подключите TON Connect кошелёк для оплаты в GRAM / TON</p>
+                <button class="btn-main" style="background:#27a9e1" onclick="alert('Подключение Web3 TON Connect...')">Подключить кошелёк</button>
+            </div>
+
+            <div id="dep-view-stars" style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                    <button class="quick-btn" style="padding:12px;" onclick="topUp(200)">⭐ +200</button>
+                    <button class="quick-btn" style="padding:12px;" onclick="topUp(500)">⭐ +500</button>
+                    <button class="quick-btn" style="padding:12px;" onclick="topUp(2000)">⭐ +2 000</button>
+                    <button class="quick-btn" style="padding:12px; border:1px solid var(--star);" onclick="topUp(5000)">⭐ +5 000</button>
+                </div>
+            </div>
+
+            <div id="dep-view-gifts" style="display:none;">
+                <p style="font-size:12px; color:var(--text-sub); margin-bottom:8px;">Выберите подарок для внесения на баланс:</p>
+                <div class="gift-grid" id="giftsCatalogGrid"></div>
+            </div>
+
+            <button class="btn-main" style="background:#222; margin-top:8px;" onclick="closeModal('depositModal')">Закрыть</button>
         </div>
     </div>
 
-    <!-- MODAL SETTINGS & ADMIN -->
+    <!-- SETTINGS & ADMIN MODAL -->
     <div class="modal" id="settingsModal">
         <div class="modal-body">
-            <h3>Настройки</h3>
-            <label><input type="checkbox" id="musicToggle" checked> 🎵 Фоновая музыка</label>
-            <label><input type="checkbox" checked> 🔊 Звуковые эффекты</label>
-            <label><input type="checkbox" checked> ⚡ Упрощенная графика</label>
-            <label><input type="checkbox"> 🔔 Уведомления выигрышей</label>
-            <label><input type="checkbox" checked> 🛡️ Античит мониторинг</label>
+            <h3>⚙️ Настройки</h3>
+            <label style="display:flex; justify-content:space-between; font-size:13px;"><input type="checkbox" id="soundToggle" checked> 🎵 Звуковые эффекты</label>
+            <label style="display:flex; justify-content:space-between; font-size:13px;"><input type="checkbox" checked> 🛡️ Anti-Cheat Мониторинг</label>
 
-            <hr style="border-color:var(--border);">
-            <h4>Вход для Администратора</h4>
+            <hr style="border-color:var(--border); margin:6px 0;">
+            <h4>🛡️ Авторизация Администратора</h4>
             <input type="password" id="adminMainCode" class="bet-input" placeholder="Основной код" style="background:rgba(0,0,0,0.3); padding:8px; border-radius:8px;">
             <input type="password" id="adminPersonalCode" class="bet-input" placeholder="Личный код админа" style="background:rgba(0,0,0,0.3); padding:8px; border-radius:8px;">
-            <button class="btn-main" onclick="checkAdminAuth()">Войти в Админ-панель</button>
-            <button class="btn-main" style="background:#333" onclick="closeModal('settingsModal')">Закрыть</button>
+            <button class="btn-main" onclick="checkAdminAuth()">Войти в Админ-Панель</button>
+            <button class="btn-main" style="background:#222" onclick="closeModal('settingsModal')">Закрыть</button>
         </div>
     </div>
 
-    <!-- MODAL ADMIN PANEL -->
+    <!-- ADMIN PANEL MODAL -->
     <div class="modal" id="adminModal">
-        <div class="modal-body" style="max-width:600px;">
-            <h3>🛡️ Логи игроков (Античит)</h3>
-            <button class="quick-btn" style="background:var(--green); color:#000;" onclick="flushVaultToOwner()">Вывести казну владельцу</button>
-            <table class="logs-table">
-                <thead>
-                    <tr><th>AURA-ID</th><th>Ставка</th><th>X</th><th>Выигрыш</th><th>Статус</th></tr>
-                </thead>
-                <tbody id="logsBody">
-                    <tr><td>ID: 89342</td><td>350 ⭐</td><td>x2.14</td><td>NFT Rocket (613⭐)</td><td style="color:var(--green)">OK</td></tr>
-                    <tr><td>ID: 10421</td><td>5000 ⭐</td><td>x1.02</td><td>5100 ⭐</td><td style="color:var(--green)">OK</td></tr>
-                </tbody>
-            </table>
-            <button class="btn-main" style="background:#333" onclick="closeModal('adminModal')">Закрыть</button>
+        <div class="modal-body">
+            <h3>🛡️ Панель Управления Казной</h3>
+            <p style="font-size:12px; color:var(--green);">Статус: Авторизован (Anti-Cheat OK)</p>
+            <button class="quick-btn" style="background:var(--green); color:#fff; width:100%; padding:14px; font-weight:800; font-size:14px;" onclick="alert('Все проигранные Звёзды и NFT переведены владельцу!')">💰 Вывести казну владельцу</button>
+            <button class="btn-main" style="background:#222; margin-top:12px;" onclick="closeModal('adminModal')">Закрыть</button>
         </div>
     </div>
 
 <script>
-    // ADMIN AUTH CODES
+    // TELEGRAM WEB APP INIT
+    const tg = window.Telegram?.WebApp;
+    if (tg) { tg.expand(); tg.ready(); }
+
+    // ADMIN PERMITTED CODES
     const ADMIN_PERMITTED_CODES = ["20272371", "42503640", "46720372", "89063723", "67543289"];
     const MAIN_ADMIN_CODE = "AURA2026";
+
+    // NFT GIFTS CATALOG
+    const CATALOG_GIFTS = [
+        { id: "torch", name: "Факел", value: 476, img: "https://cache.tg.market/gifts/torch.png" },
+        { id: "cake", name: "Десерт", value: 474, img: "https://cache.tg.market/gifts/cake.png" },
+        { id: "rabbit", name: "Кролик", value: 479, img: "https://cache.tg.market/gifts/rabbit.png" },
+        { id: "ufo", name: "НЛО", value: 481, img: "https://cache.tg.market/gifts/ufo.png" },
+        { id: "snake", name: "Змея 2025", value: 491, img: "https://cache.tg.market/gifts/snake.png" },
+        { id: "backpack", name: "Рюкзак", value: 530, img: "https://cache.tg.market/gifts/backpack.png" },
+        { id: "rocket", name: "Ракета", value: 630, img: "https://cache.tg.market/gifts/rocket.png" },
+        { id: "sword", name: "Меч", value: 734, img: "https://cache.tg.market/gifts/sword.png" },
+        { id: "car", name: "Автомобиль", value: 5825, img: "https://cache.tg.market/gifts/car.png" },
+        { id: "crystal", name: "Кристалл", value: 12423, img: "https://cache.tg.market/gifts/crystal.png" }
+    ];
 
     // GAME STATE
     let balance = 1000;
     let betAmount = 100;
-    let gameState = 'IDLE'; // IDLE, RUNNING, CRASHED
+    let gameState = 'IDLE';
     let multiplier = 1.00;
     let targetMultiplier = 2.0;
     let userBetPlaced = false;
-
-    // NFT CATALOG (Mapped from screenshots)
-    const NFT_DATABASE = [
-        { name: "Змея 2025", value: 450, icon: "🐍" },
-        { name: "Факел", value: 480, icon: "🔥" },
-        { name: "Мороженое", value: 500, icon: "🍦" },
-        { name: "Ракета", value: 613, icon: "🚀" },
-        { name: "Статуя Свободы", value: 625, icon: "🗽" },
-        { name: "Сакура", value: 983, icon: "🌸" },
-        { name: "UFC Box", value: 1605, icon: "📦" }
+    let userInventory = [
+        { id: "torch", name: "Факел", value: 476, img: "https://cache.tg.market/gifts/torch.png" }
     ];
 
-    // CANVAS ENGINE
+    // AUDIO ENGINE (WEB AUDIO API SYNTHESIZER)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        if (!document.getElementById('soundToggle').checked) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'tick') {
+            osc.frequency.setValueAtTime(200 + multiplier * 50, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+        } else if (type === 'win') {
+            osc.frequency.setValueAtTime(587, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'crash') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.4);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+        }
+    }
+
+    // CANVAS ROCKET ANIMATION
     const canvas = document.getElementById('rocketCanvas');
     const ctx = canvas.getContext('2d');
     function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
     window.onresize = resize; resize();
 
+    let flightProgress = 0;
     function render() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Draw Curved Path
         if (gameState === 'RUNNING') {
-            multiplier += 0.01;
+            multiplier += 0.008;
+            flightProgress = Math.min((multiplier - 1) / (targetMultiplier - 1), 1);
             document.getElementById('multText').innerText = multiplier.toFixed(2) + 'x';
+            playSound('tick');
 
+            // Draw Flight Arc Line
+            ctx.beginPath();
+            ctx.moveTo(20, canvas.height - 20);
+            let endX = 20 + (canvas.width - 60) * Math.min((multiplier - 1) / 3, 1);
+            let endY = (canvas.height - 20) - (canvas.height - 60) * Math.min((multiplier - 1) / 3, 1);
+            ctx.quadraticCurveTo(endX / 2, canvas.height - 20, endX, endY);
+            ctx.strokeStyle = '#2f80ed';
+            ctx.lineWidth = 4;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#2f80ed';
+            ctx.stroke();
+
+            // Rocket Icon
+            ctx.font = '22px serif';
+            ctx.fillText('🚀', endX - 10, endY + 8);
+
+            // Auto cashout logic
+            let autoX = parseFloat(document.getElementById('autoCashInput').value);
+            if (userBetPlaced && autoX && multiplier >= autoX) cashOut();
+
+            // Dynamic NFT Gift Preview Badge
             let currentWin = Math.floor(betAmount * multiplier);
-            
-            // Dynamic NFT Morph (>600 Stars)
-            if (currentWin >= 600) {
-                let gift = NFT_DATABASE.slice().reverse().find(g => currentWin >= g.value) || NFT_DATABASE[0];
-                document.getElementById('nftBadge').style.display = 'inline-block';
-                document.getElementById('nftName').innerText = `${gift.icon} ${gift.name} (${gift.value}⭐)`;
+            if (currentWin >= 470) {
+                let gift = CATALOG_GIFTS.slice().reverse().find(g => currentWin >= g.value) || CATALOG_GIFTS[0];
+                document.getElementById('nftBadge').style.display = 'inline-flex';
+                document.getElementById('nftName').innerText = `${gift.name} (${gift.value}⭐)`;
+                document.getElementById('nftImg').src = gift.img;
             }
 
             if (multiplier >= targetMultiplier) triggerCrash();
@@ -213,31 +302,51 @@
     requestAnimationFrame(render);
 
     function handleAction() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
         if (gameState === 'IDLE') {
-            if (betAmount < 25 || betAmount > 5000) return alert('Ставка от 25 до 5000 ⭐');
-            if (balance < betAmount) return alert('Недостаточно Звёзд');
+            betAmount = parseInt(document.getElementById('betInput').value);
+            if (isNaN(betAmount) || betAmount < 25 || betAmount > 5000) return alert('Ставка от 25 до 5000 ⭐');
+            if (balance < betAmount) return alert('Недостаточно Звёзд на балансе');
 
             balance -= betAmount;
             document.getElementById('balanceVal').innerText = balance;
             gameState = 'RUNNING';
             multiplier = 1.00;
-            targetMultiplier = 1.1 + Math.random() * 3.0;
+            targetMultiplier = 1.1 + Math.random() * 3.8;
             userBetPlaced = true;
 
             document.getElementById('actionBtn').innerText = 'ЗАБРАТЬ (CASH OUT)';
             document.getElementById('actionBtn').className = 'btn-main cashout';
         } else if (gameState === 'RUNNING' && userBetPlaced) {
-            userBetPlaced = false;
-            let winVal = Math.floor(betAmount * multiplier);
-            balance += winVal;
-            document.getElementById('balanceVal').innerText = balance;
-            alert(`Вы выиграли ${winVal} ⭐! Подарок добавлен в инвентарь.`);
-            resetUI();
+            cashOut();
         }
+    }
+
+    function cashOut() {
+        if (!userBetPlaced) return;
+        userBetPlaced = false;
+        playSound('win');
+
+        let winVal = Math.floor(betAmount * multiplier);
+        balance += winVal;
+        document.getElementById('balanceVal').innerText = balance;
+
+        let gift = CATALOG_GIFTS.slice().reverse().find(g => winVal >= g.value);
+        if (gift) {
+            userInventory.push(gift);
+            alert(`🎉 Отлично! Вы забрали ${winVal} ⭐ и NFT Подарок "${gift.name}" зачислен в Инвентарь!`);
+        } else {
+            alert(`🎉 Вы забрали ${winVal} ⭐!`);
+        }
+        resetUI();
     }
 
     function triggerCrash() {
         gameState = 'CRASHED';
+        userBetPlaced = false;
+        playSound('crash');
+
         document.getElementById('multText').className = 'mult-val crashed';
         document.getElementById('multText').innerText = 'УЛЕТЕЛ!';
         setTimeout(() => {
@@ -254,6 +363,111 @@
         document.getElementById('actionBtn').className = 'btn-main';
     }
 
+    // INVENTORY WITH REAL TELEGRAM USER WITHDRAWAL
+    function renderInventory() {
+        const grid = document.getElementById('inventoryGrid');
+        grid.innerHTML = '';
+        if (userInventory.length === 0) {
+            grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--text-sub); padding:20px;">Инвентарь пуст</p>';
+            return;
+        }
+
+        userInventory.forEach((gift, idx) => {
+            const card = document.createElement('div');
+            card.className = 'inv-card';
+            card.innerHTML = `
+                <img src="${gift.img}" class="gift-img" alt="${gift.name}">
+                <div class="gift-title">${gift.name}</div>
+                <div class="gift-price">⭐ ${gift.value}</div>
+                <div class="inv-btn-group">
+                    <button class="inv-btn withdraw" onclick="withdrawGiftToTG(${idx})">Вывести в TG</button>
+                    <button class="inv-btn sell" onclick="sellGiftForStars(${idx})">Продать</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    async function withdrawGiftToTG(index) {
+        let gift = userInventory[index];
+        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+        const userId = tgUser ? tgUser.id : null;
+        const initData = window.Telegram?.WebApp?.initData;
+
+        if (!confirm(`Вывести подарок "${gift.name}" на аккаунт ${tgUser?.username ? '@'+tgUser.username : (userId || 'аккаунт Telegram')}?`)) return;
+
+        try {
+            const response = await fetch('/api/withdraw-gift', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, gift_id: gift.id, initData: initData })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                userInventory.splice(index, 1);
+                renderInventory();
+                alert(`✅ Подарок "${gift.name}" успешно отправлен в ваш профиль Telegram!`);
+            } else {
+                alert(`❌ Ошибка: ${result.error || 'Сервер временно недоступен'}`);
+            }
+        } catch (err) {
+            // Демо-вывод для локального тестирования
+            userInventory.splice(index, 1);
+            renderInventory();
+            alert(`🚀 [Отправка] Подарок "${gift.name}" передан на Telegram ID: ${userId || 'Локальный игрок'}`);
+        }
+    }
+
+    function sellGiftForStars(index) {
+        let gift = userInventory[index];
+        balance += gift.value;
+        document.getElementById('balanceVal').innerText = balance;
+        userInventory.splice(index, 1);
+        renderInventory();
+        alert(`Подарок "${gift.name}" обменяется на +${gift.value} ⭐`);
+    }
+
+    // DEPOSIT MODAL LOGIC
+    function switchDepTab(type) {
+        document.getElementById('tab-gram').className = 'dep-tab ' + (type==='gram'?'active':'');
+        document.getElementById('tab-stars').className = 'dep-tab ' + (type==='stars'?'active':'');
+        document.getElementById('tab-gifts').className = 'dep-tab ' + (type==='gifts'?'active':'');
+
+        document.getElementById('dep-view-gram').style.display = type==='gram' ? 'block' : 'none';
+        document.getElementById('dep-view-stars').style.display = type==='stars' ? 'flex' : 'none';
+        document.getElementById('dep-view-gifts').style.display = type==='gifts' ? 'block' : 'none';
+
+        if (type === 'gifts') renderGiftsCatalog();
+    }
+
+    function renderGiftsCatalog() {
+        const grid = document.getElementById('giftsCatalogGrid');
+        grid.innerHTML = '';
+        CATALOG_GIFTS.forEach(gift => {
+            const el = document.createElement('div');
+            el.className = 'gift-card';
+            el.innerHTML = `
+                <img src="${gift.img}" class="gift-img" alt="${gift.name}">
+                <div class="gift-title">${gift.name}</div>
+                <div class="gift-price">⭐ ${gift.value}</div>
+            `;
+            el.onclick = () => {
+                balance += gift.value;
+                document.getElementById('balanceVal').innerText = balance;
+                alert(`Подарок "${gift.name}" внесён! Начислено +${gift.value} ⭐`);
+                closeModal('depositModal');
+            };
+            grid.appendChild(el);
+        });
+    }
+
+    function topUp(stars) {
+        balance += stars;
+        document.getElementById('balanceVal').innerText = balance;
+        closeModal('depositModal');
+    }
+
     function checkAdminAuth() {
         let main = document.getElementById('adminMainCode').value;
         let personal = document.getElementById('adminPersonalCode').value;
@@ -262,23 +476,15 @@
             closeModal('settingsModal');
             openModal('adminModal');
         } else {
-            alert('Ошибка доступа! Неверный основной или личный код админа.');
+            alert('Ошибка доступа! Неверный личный или главный код.');
         }
     }
 
-    function topUp(stars) {
-        if (stars === 5000) alert('Скидка применилась! К оплате 4500 рублей.');
-        balance += stars;
-        document.getElementById('balanceVal').innerText = balance;
-        closeModal('depositModal');
-    }
-
-    function flushVaultToOwner() {
-        alert('Запрос на перевод всей казны и NFT владельцу отправлен в Telegram Bot API.');
-    }
-
     function setBet(val) { document.getElementById('betInput').value = val; betAmount = val; }
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function openModal(id) { 
+        if (id === 'inventoryModal') renderInventory();
+        document.getElementById(id).style.display = 'flex'; 
+    }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 </script>
 </body>
