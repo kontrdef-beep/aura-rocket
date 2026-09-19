@@ -3,382 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aura Rocket 3D</title>
-    <!-- THREE.JS 3D ENGINE -->
+    <title>Gorilla Case - Aura Rocket 3D</title>
+    <!-- Three.js 3D Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #090c13;
-            --card: #121722;
-            --card-border: rgba(255, 255, 255, 0.07);
-            --accent-blue: #0088ff;
-            --accent-green: #00e676;
-            --accent-red: #ff3d71;
+            --bg: #0b0e14;
+            --card-bg: #151a23;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent-blue: #2f80ed;
             --star-gold: #ffb703;
-            --text-muted: #6c788e;
+            --green: #27ae60;
+            --red: #eb5757;
+            --text-muted: #828a99;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; user-select: none; }
         body { background: var(--bg); color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* HEADER */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(18, 23, 34, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border); }
-        .logo-box { display: flex; align-items: center; gap: 10px; }
-        .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #0088ff, #0055ff); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 0 15px rgba(0, 136, 255, 0.4); }
-        .logo-text { font-weight: 900; font-size: 16px; line-height: 1.1; }
-        .logo-text span { display: block; font-size: 14px; color: var(--accent-blue); }
+        /* HEADER & TOP NAV */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: rgba(11, 14, 20, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+        .back-btn { font-size: 16px; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .app-title { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .app-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-size: 11px; }
 
-        .header-actions { display: flex; align-items: center; gap: 8px; }
-        .stars-pill { background: rgba(255, 183, 3, 0.1); border: 1px solid rgba(255, 183, 3, 0.3); padding: 6px 12px; border-radius: 20px; font-weight: 800; color: var(--star-gold); font-size: 14px; display: flex; align-items: center; gap: 6px; }
-        .icon-btn { width: 34px; height: 34px; background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; }
-
-        /* HISTORY COEFFICIENTS */
-        .history-bar { display: flex; gap: 6px; padding: 8px 16px; overflow-x: auto; scrollbar-width: none; }
-        .history-bar::-webkit-scrollbar { display: none; }
-        .history-pill { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 800; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); white-space: nowrap; }
-        .history-pill.win { color: var(--accent-green); border-color: rgba(0, 230, 118, 0.3); background: rgba(0, 230, 118, 0.08); }
-        .history-pill.loss { color: var(--accent-red); border-color: rgba(255, 61, 113, 0.3); background: rgba(255, 61, 113, 0.08); }
-        .history-pill.gold { color: var(--star-gold); border-color: rgba(255, 183, 3, 0.3); background: rgba(255, 183, 3, 0.08); }
-
-        /* 3D VIEWPORT */
-        .viewport-3d { position: relative; height: 230px; margin: 4px 16px; background: #000; border-radius: 20px; border: 1px solid var(--card-border); overflow: hidden; box-shadow: inset 0 0 50px rgba(0, 136, 255, 0.15); }
+        /* 3D VIEWPORT CONTAINER */
+        .viewport-container { position: relative; height: 260px; background: radial-gradient(circle at 50% 30%, #121929 0%, #080a0f 100%); overflow: hidden; }
         #canvas3d { width: 100%; height: 100%; display: block; }
 
-        .mult-overlay { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
-        .mult-number { font-size: 50px; font-weight: 900; letter-spacing: -1px; text-shadow: 0 0 30px rgba(0, 136, 255, 0.8); color: #fff; }
-        .mult-status { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-top: -4px; }
-        .mult-number.crashed { color: var(--accent-red); text-shadow: 0 0 30px rgba(255, 61, 113, 0.8); }
+        /* COEFFICIENTS HISTORY BAR */
+        .history-row { display: flex; gap: 8px; padding: 10px 16px; overflow-x: auto; background: var(--bg); scrollbar-width: none; }
+        .history-row::-webkit-scrollbar { display: none; }
+        .coeff-badge { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 800; background: var(--card-bg); border: 1px solid var(--border); color: #fff; white-space: nowrap; }
+        .coeff-badge.active { background: #fff; color: #000; }
+        .coeff-badge.blue { background: rgba(47, 128, 237, 0.2); color: var(--accent-blue); border-color: var(--accent-blue); }
 
-        /* FLOATING 3D NFT GIFT NOTIFICATION */
-        .gift-alert { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(18, 23, 34, 0.9); backdrop-filter: blur(10px); border: 1px solid var(--accent-green); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 8px; opacity: 0; transition: 0.3s; box-shadow: 0 0 15px rgba(0,230,118,0.3); }
-        .gift-alert.active { opacity: 1; }
-
-        /* LIVE BETS PANEL */
-        .live-panel { margin: 8px 16px; background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: hidden; }
-        .live-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .live-dots { display: flex; align-items: center; gap: 6px; color: var(--accent-green); }
-        .dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 8px var(--accent-green); }
-
-        .bets-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; scrollbar-width: none; }
-        .bet-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 6px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; }
-        .user-info { display: flex; align-items: center; gap: 8px; }
-        .user-avatar { width: 22px; height: 22px; border-radius: 50%; background: #222c3d; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-        .win-amount { color: var(--accent-red); font-weight: 800; }
-        .win-amount.positive { color: var(--accent-green); }
-
-        /* CONTROLS AREA */
-        .controls-area { padding: 8px 16px 16px 16px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
+        /* BETS & PRIZES LIST */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .bets-panel { flex: 1; background: var(--card-bg); margin: 0 12px 12px 12px; border-radius: 20px; border: 1px solid var(--border); padding: 12px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+        .bets-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 0 4px; }
         
-        .auto-row { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--card-border); padding: 6px 12px; border-radius: 12px; }
-        .auto-label { font-size: 12px; font-weight: 800; color: var(--text-muted); }
-        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #222c3d; transition: .3s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--accent-blue); }
-        input:checked + .slider:before { transform: translateX(16px); }
-
-        .bet-input-row { display: flex; gap: 6px; align-items: center; }
-        .input-box { flex: 1; background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 10px 12px; display: flex; align-items: center; }
-        .main-input { background: transparent; border: none; color: #fff; font-size: 18px; font-weight: 900; width: 100%; outline: none; }
+        .bets-list { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; scrollbar-width: none; }
+        .bet-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 700; }
+        .user-col { display: flex; align-items: center; gap: 10px; }
+        .avatar-circle { width: 32px; height: 32px; border-radius: 50%; background: #232a36; display: flex; align-items: center; justify-content: center; font-size: 14px; overflow: hidden; }
+        .user-details { display: flex; flex-direction: column; }
+        .user-name { font-size: 13px; color: #fff; }
+        .user-bet { font-size: 11px; color: var(--star-gold); display: flex; align-items: center; gap: 4px; }
+        .user-coeff { color: var(--green); margin-left: 6px; font-weight: 800; }
         
-        .btn-sub { background: #1c2333; border: 1px solid var(--card-border); color: var(--accent-blue); font-size: 12px; font-weight: 800; padding: 12px 14px; border-radius: 12px; cursor: pointer; }
-        .btn-sub:active { background: #2a354d; }
+        .prize-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border); font-size: 12px; }
 
-        .btn-start { background: linear-gradient(135deg, #00e676 0%, #00b0ff 100%); border: none; color: #000; font-size: 18px; font-weight: 900; padding: 14px; border-radius: 14px; width: 100%; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 230, 118, 0.4); display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.1s; }
-        .btn-start:active { transform: scale(0.98); }
-        .btn-start.cashout { background: linear-gradient(135deg, #ffb703 0%, #ff5722 100%); color: #fff; box-shadow: 0 4px 20px rgba(255, 183, 3, 0.4); }
+        /* FOOTER ACTION BUTTON */
+        .action-footer { padding: 12px 16px; background: var(--bg); border-top: 1px solid var(--border); }
+        .btn-bet { background: var(--accent-blue); border: none; color: #fff; font-size: 17px; font-weight: 800; padding: 16px; border-radius: 18px; width: 100%; cursor: pointer; box-shadow: 0 6px 20px rgba(47, 128, 237, 0.4); }
+        .btn-bet.cashout { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4); }
+
+        /* MODAL DEPOSIT (ПОПОЛНЕНИЕ В СТИЛЕ GORILLA CASE) */
+        .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); display: none; flex-direction: column; z-index: 100; }
+        .modal.active { display: flex; }
+        .modal-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .tabs-bar { display: flex; background: #1a202c; padding: 4px; border-radius: 16px; margin: 0 16px 16px 16px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: var(--text-muted); font-size: 13px; font-weight: 800; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .tab-btn.active { background: var(--accent-blue); color: #fff; }
+
+        .modal-body { flex: 1; overflow-y: auto; padding: 0 16px 20px 16px; display: flex; flex-direction: column; gap: 16px; }
+        .deposit-card { background: var(--card-bg); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--border); }
+        .deposit-amount { font-size: 48px; font-weight: 900; color: #fff; margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .quick-amounts { display: flex; gap: 10px; justify-content: center; }
+        .q-btn { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 14px; font-weight: 800; font-size: 13px; }
+
+        .gifts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .gift-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+        .gift-icon { font-size: 32px; }
+        .gift-price { background: rgba(255,183,3,0.1); color: var(--star-gold); padding: 4px 8px; border-radius: 10px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 4px; }
     </style>
 </head>
 <body>
 
     <!-- HEADER -->
     <header>
-        <div class="logo-box">
-            <div class="logo-icon">🚀</div>
-            <div class="logo-text">Aura Rocket <span>3D EDITION</span></div>
-        </div>
-        <div class="header-actions">
-            <div class="stars-pill">⭐ <span id="balanceText">13 710</span></div>
-            <div class="icon-btn">📦</div>
-            <div class="icon-btn">⚙️</div>
-        </div>
+        <div class="back-btn" onclick="toggleDepositModal()">← Назад</div>
+        <div class="app-title"><div class="app-avatar">🦍</div> Gorilla Case</div>
+        <div style="font-size: 18px; cursor: pointer;" onclick="toggleDepositModal()">💳</div>
     </header>
 
-    <!-- HISTORY BADGES -->
-    <div class="history-bar">
-        <div class="history-pill win">8.30x</div>
-        <div class="history-pill loss">1.29x</div>
-        <div class="history-pill win">3.39x</div>
-        <div class="history-pill loss">1.04x</div>
-        <div class="history-pill gold">2.32x</div>
-        <div class="history-pill win">12.50x</div>
-        <div class="history-pill loss">1.11x</div>
+    <!-- COEFFICIENTS HISTORY -->
+    <div class="history-row">
+        <div class="coeff-badge active">x2.62</div>
+        <div class="coeff-badge">x1.19</div>
+        <div class="coeff-badge blue">x2.36</div>
+        <div class="coeff-badge blue">x2.03</div>
+        <div class="coeff-badge">x1.05</div>
+        <div class="coeff-badge blue">x4.12</div>
     </div>
 
-    <!-- 3D VIEWPORT CANVAS -->
-    <div class="viewport-3d">
+    <!-- 3D ROCKET VIEWPORT -->
+    <div class="viewport-container">
         <canvas id="canvas3d"></canvas>
-        <div class="mult-overlay">
-            <div class="mult-number" id="multText">1.00x</div>
-            <div class="mult-status" id="statusText">ГОТОВ К СТАРТУ</div>
-        </div>
-        <div class="gift-alert" id="giftAlert">
-            <span style="font-size: 16px;">🎁</span>
-            <span>Выигрыш: <strong style="color:var(--star-gold)" id="giftAlertText">🔥 Факел NFT (476 ⭐)</strong></span>
-        </div>
     </div>
 
-    <!-- LIVE BETS TABLE -->
-    <div class="live-panel">
-        <div class="live-header">
-            <div class="live-dots"><div class="dot"></div> LIVE СТАВКИ</div>
-            <div>8 ИГРОКОВ</div>
-        </div>
-        <div class="bets-list">
-            <div class="bet-row"><div class="user-info"><div class="user-avatar">👑</div>CryptoKing</div><div class="win-amount">-500</div></div>
-            <div class="bet-row"><div class="user-info"><div class="user-avatar">👩</div>Anna_Pro</div><div class="win-amount">-300</div></div>
-            <div class="bet-row"><div class="user-info"><div class="user-avatar">👨</div>NeonBoy</div><div class="win-amount">-150</div></div>
-            <div class="bet-row"><div class="user-info"><div class="user-avatar">🚀</div>Alex_NFT</div><div class="win-amount positive">+1 200</div></div>
-        </div>
-    </div>
-
-    <!-- CONTROLS -->
-    <div class="controls-area">
-        <div class="auto-row">
-            <span class="auto-label">АВТО-ВЫВОД</span>
-            <label class="switch">
-                <input type="checkbox" id="autoToggle">
-                <span class="slider"></span>
-            </label>
-            <input type="number" id="autoValue" value="2.00" step="0.1" style="width: 55px; background: #1c2333; border: 1px solid var(--card-border); color: #fff; border-radius: 8px; text-align: center; font-weight: 800; font-size: 12px; padding: 3px;">
-        </div>
-
-        <div class="bet-input-row">
-            <div class="input-box">
-                <input type="number" id="betAmount" class="main-input" value="6400">
+    <!-- LIVE BETS & GIFTS PANEL -->
+    <div class="main-content">
+        <div class="bets-panel">
+            <div class="bets-header">
+                <span>Ставка</span>
+                <span>Возможн. приз</span>
             </div>
-            <button class="btn-sub" onclick="halfBet()">½</button>
-            <button class="btn-sub" onclick="doubleBet()">2x</button>
+            <div class="bets-list" id="betsList">
+                <!-- Dynamic Bets Injection -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER ACTION BUTTON -->
+    <div class="action-footer">
+        <button class="btn-bet" id="actionBtn" onclick="handleGameStep()">Сделать ставку</button>
+    </div>
+
+    <!-- MODAL DEPOSIT (ПОПОЛНЕНИЕ) -->
+    <div class="modal" id="depositModal">
+        <div class="modal-header">
+            <div class="back-btn" onclick="toggleDepositModal()">← Назад</div>
+            <div class="app-title">Пополнение баланса</div>
+            <div></div>
         </div>
 
-        <button id="mainStartBtn" class="btn-start" onclick="handleGameAction()">
-            🚀 Старт
-        </button>
+        <div class="tabs-bar">
+            <button class="tab-btn" onclick="switchTab('gram')">💎 GRAM</button>
+            <button class="tab-btn active" onclick="switchTab('stars')">⭐ Звездами</button>
+            <button class="tab-btn" onclick="switchTab('gifts')">🎁 Подарками</button>
+        </div>
+
+        <div class="modal-body" id="modalBody">
+            <!-- Dynamic Tab Content -->
+        </div>
     </div>
 
 <script>
-    // --- THREE.JS 3D ENGINE INITIALIZATION ---
-    const container = document.querySelector('.viewport-3d');
+    // --- TELEGRAM NFT GIFTS DATABASE ---
+    const GIFTS_DATABASE = [
+        { name: "Факел", price: 476, icon: "🔥" },
+        { name: "Кролик", price: 479, icon: "🐰" },
+        { name: "Леденец", price: 520, icon: "🍭" },
+        { name: "Рюкзак", price: 530, icon: "🎒" },
+        { name: "Ракета", price: 630, icon: "🚀" },
+        { name: "Печенье", price: 682, icon: "🍪" },
+        { name: "Обезьяна", price: 842, icon: "🎨" },
+        { name: "Сердечко", price: 2412, icon: "❤️" },
+        { name: "Кольцо", price: 3329, icon: "💍" },
+        { name: "Машина", price: 5825, icon: "🚗" },
+        { name: "Часы", price: 5827, icon: "⌚" },
+        { name: "Кристалл", price: 7604, icon: "💎" },
+        { name: "Сумка", price: 13337, icon: "👜" },
+        { name: "Кот", price: 27697, icon: "🐱" }
+    ];
+
+    // Helper: Find closest Telegram gift for potential win
+    function getGiftForValue(stars) {
+        let sorted = [...GIFTS_DATABASE].sort((a,b) => b.price - a.price);
+        let found = sorted.find(g => stars >= g.price);
+        return found || { name: "Звёзды", price: stars, icon: "⭐" };
+    }
+
+    // --- THREE.JS 3D ENGINE (GORILLA TON ROCKET) ---
+    const container = document.querySelector('.viewport-container');
     const canvas = document.getElementById('canvas3d');
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x000000, 0.03);
-
-    const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.set(0, 0, 7);
+    const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 0, 8);
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     // LIGHTS
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    scene.add(ambientLight);
-
-    const dirLight = new THREE.DirectionalLight(0x0088ff, 2);
-    dirLight.position.set(5, 10, 7);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const dirLight = new THREE.DirectionalLight(0x2f80ed, 2.5);
+    dirLight.position.set(5, 5, 5);
     scene.add(dirLight);
 
-    const pointLight = new THREE.PointLight(0xff5722, 3, 10);
-    scene.add(pointLight);
+    // 3D MOON / TON COIN BACKGROUND
+    const moonGeo = new THREE.SphereGeometry(1.5, 32, 32);
+    const moonMat = new THREE.MeshStandardMaterial({ color: 0xffe082, emissive: 0xffb703, emissiveIntensity: 0.3, roughness: 0.8 });
+    const moonMesh = new THREE.Mesh(moonGeo, moonMat);
+    moonMesh.position.set(-2.5, 1.8, -3);
+    scene.add(moonMesh);
 
-    // --- PROCEDURAL 3D ROCKET MESH ---
+    // 3D BLUE TON ROCKET WITH GORILLA
     const rocketGroup = new THREE.Group();
 
-    // Body
-    const bodyGeo = new THREE.CylinderGeometry(0.3, 0.4, 2, 16);
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x1565c0, metalness: 0.8, roughness: 0.2 });
-    const body = new THREE.Mesh(bodyGeo, bodyMat);
-    rocketGroup.add(body);
+    // Fuselage (Blue Capsule)
+    const bodyGeo = new THREE.CylinderGeometry(0.5, 0.6, 2.2, 32);
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x0066ff, metalness: 0.6, roughness: 0.2 });
+    const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+    rocketGroup.add(bodyMesh);
 
-    // Nose
-    const noseGeo = new THREE.ConeGeometry(0.3, 0.8, 16);
-    const noseMat = new THREE.MeshStandardMaterial({ color: 0x00e676, emissive: 0x00e676, emissiveIntensity: 0.4 });
-    const nose = new THREE.Mesh(noseGeo, noseMat);
-    nose.position.y = 1.4;
-    rocketGroup.add(nose);
+    // Nose Cone
+    const noseGeo = new THREE.ConeGeometry(0.5, 0.8, 32);
+    const noseMat = new THREE.MeshStandardMaterial({ color: 0x0044cc, metalness: 0.8 });
+    const noseMesh = new THREE.Mesh(noseGeo, noseMat);
+    noseMesh.position.y = 1.5;
+    rocketGroup.add(noseMesh);
 
-    // Wings
-    const wingGeo = new THREE.BoxGeometry(1.2, 0.4, 0.05);
-    const wingMat = new THREE.MeshStandardMaterial({ color: 0xff3d71 });
-    const wings = new THREE.Mesh(wingGeo, wingMat);
-    wings.position.y = -0.6;
-    rocketGroup.add(wings);
+    // Glass Cockpit
+    const glassGeo = new THREE.SphereGeometry(0.4, 16, 16);
+    const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transmission: 0.9, opacity: 1, transparent: true, roughness: 0.1 });
+    const glassMesh = new THREE.Mesh(glassGeo, glassMat);
+    glassMesh.position.set(0, 0.5, 0.3);
+    rocketGroup.add(glassMesh);
 
-    // Thruster Flame Base
-    const flameGeo = new THREE.ConeGeometry(0.25, 0.8, 16);
-    const flameMat = new THREE.MeshBasicMaterial({ color: 0xffb703 });
-    const flame = new THREE.Mesh(flameGeo, flameMat);
-    flame.position.y = -1.4;
-    flame.rotation.x = Math.PI;
-    rocketGroup.add(flame);
+    // Gorilla Head inside cockpit
+    const gorillaGeo = new THREE.SphereGeometry(0.25, 16, 16);
+    const gorillaMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9 });
+    const gorillaMesh = new THREE.Mesh(gorillaGeo, gorillaMat);
+    gorillaMesh.position.set(0, 0.45, 0.2);
+    rocketGroup.add(gorillaMesh);
 
-    rocketGroup.rotation.z = -Math.PI / 4;
+    // Thruster Flame
+    const flameGeo = new THREE.ConeGeometry(0.3, 1, 16);
+    const flameMat = new THREE.MeshBasicMaterial({ color: 0x00e676 });
+    const flameMesh = new THREE.Mesh(flameGeo, flameMat);
+    flameMesh.position.y = -1.5;
+    flameMesh.rotation.x = Math.PI;
+    rocketGroup.add(flameMesh);
+
+    rocketGroup.rotation.z = -Math.PI / 3;
     scene.add(rocketGroup);
 
-    // --- 3D WARP STARS SYSTEM ---
+    // STARFIELD PARTICLES
     const starsGeo = new THREE.BufferGeometry();
-    const starsCount = 600;
-    const posArray = new Float32Array(starsCount * 3);
-
-    for(let i=0; i<starsCount*3; i+=3) {
-        posArray[i] = (Math.random() - 0.5) * 30;
-        posArray[i+1] = (Math.random() - 0.5) * 30;
-        posArray[i+2] = (Math.random() - 0.5) * 40;
+    const count = 300;
+    const pos = new Float32Array(count * 3);
+    for(let i=0; i<count*3; i+=3) {
+        pos[i] = (Math.random() - 0.5) * 20;
+        pos[i+1] = (Math.random() - 0.5) * 20;
+        pos[i+2] = (Math.random() - 0.5) * 20;
     }
-    starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    const starsMat = new THREE.PointsMaterial({ size: 0.08, color: 0xffffff, transparent: true, opacity: 0.8 });
-    const starField = new THREE.Points(starsGeo, starsMat);
+    starsGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const starField = new THREE.Points(starsGeo, new THREE.PointsMaterial({ size: 0.06, color: 0xffffff }));
     scene.add(starField);
 
-    // --- FLOATING 3D NFT GIFT BOX ---
-    const giftGeo = new THREE.BoxGeometry(0.8, 0.8, 0.8);
-    const giftMat = new THREE.MeshStandardMaterial({ color: 0xffb703, metalness: 0.5, roughness: 0.1, emissive: 0xffb703, emissiveIntensity: 0.2 });
-    const giftMesh = new THREE.Mesh(giftGeo, giftMat);
-    giftMesh.position.set(10, 10, -5);
-    scene.add(giftMesh);
-
-    // --- GAME ENGINE LOGIC ---
-    let gameState = 'IDLE'; // IDLE, RUNNING, CRASHED
+    // GAME STATE LOGIC
+    let isFlying = false;
     let multiplier = 1.00;
-    let targetCrash = 2.50;
-    let balance = 13710;
+    let betAmount = 530;
 
-    function handleGameAction() {
-        const btn = document.getElementById('mainStartBtn');
-        if (gameState === 'IDLE') {
-            let bet = parseInt(document.getElementById('betAmount').value);
-            if (bet > balance) return alert('Недостаточно Звёзд!');
-            
-            balance -= bet;
-            document.getElementById('balanceText').innerText = balance.toLocaleString();
+    // INITIAL LIVE BETS DATA
+    const betsData = [
+        { name: "ihzu_7r31", bet: 2442, coeff: 2.22, won: true },
+        { name: "h3v5hjsjn", bet: 330, coeff: 1.65, won: true },
+        { name: "vad1mf999", bet: 530, coeff: 2.65, won: false },
+        { name: "yourn3xtgam3", bet: 530, coeff: 2.65, won: false },
+        { name: "saharoc88", bet: 476, coeff: 1.50, won: false }
+    ];
 
-            gameState = 'RUNNING';
+    function renderBetsList() {
+        const listEl = document.getElementById('betsList');
+        listEl.innerHTML = '';
+        betsData.forEach(item => {
+            let totalWin = Math.floor(item.bet * (isFlying ? multiplier : item.coeff));
+            let gift = getGiftForValue(totalWin);
+
+            let row = document.createElement('div');
+            row.className = 'bet-item';
+            row.innerHTML = `
+                <div class="user-col">
+                    <div class="avatar-circle">👤</div>
+                    <div class="user-details">
+                        <span class="user-name">${item.name}</span>
+                        <span class="user-bet">⭐ ${item.bet} <span class="user-coeff">x${(isFlying ? multiplier : item.coeff).toFixed(2)} ${item.won ? '✓' : ''}</span></span>
+                    </div>
+                </div>
+                <div class="prize-badge">
+                    <span>${gift.icon}</span>
+                    <span style="color:#fff; font-weight:800;">${gift.name}</span>
+                </div>
+            `;
+            listEl.appendChild(row);
+        });
+    }
+
+    function handleGameStep() {
+        const btn = document.getElementById('actionBtn');
+        if(!isFlying) {
+            isFlying = true;
             multiplier = 1.00;
-            targetCrash = (1.1 + Math.random() * 4.5).toFixed(2);
-
-            btn.innerText = '💰 ЗАБРАТЬ';
-            btn.className = 'btn-start cashout';
-            document.getElementById('statusText').innerText = 'В ПОЛЁТЕ...';
-            document.getElementById('giftAlert').classList.remove('active');
-        } else if (gameState === 'RUNNING') {
-            cashOut();
+            btn.innerText = "Забрать выигрыш";
+            btn.className = "btn-bet cashout";
+        } else {
+            isFlying = false;
+            btn.innerText = "Сделать ставку";
+            btn.className = "btn-bet";
+            alert(`🎉 Поздравляем! Вы выиграли: ${getGiftForValue(betAmount * multiplier).icon} ${getGiftForValue(betAmount * multiplier).name}`);
+            multiplier = 1.00;
+            renderBetsList();
         }
     }
 
-    function cashOut() {
-        let bet = parseInt(document.getElementById('betAmount').value);
-        let win = Math.floor(bet * multiplier);
-        balance += win;
-        document.getElementById('balanceText').innerText = balance.toLocaleString();
-        
-        alert(`🎉 ВЫИГРЫШ: +${win} ⭐ (x${multiplier.toFixed(2)})`);
-        resetGameUI();
-    }
-
-    function triggerCrash() {
-        gameState = 'CRASHED';
-        document.getElementById('multText').className = 'mult-number crashed';
-        document.getElementById('multText').innerText = 'УЛЕТЕЛ!';
-        document.getElementById('statusText').innerText = 'РАКЕТА ВЗОРВАЛАСЬ';
-
-        // 3D Shockwave Effect
-        flame.scale.set(0,0,0);
-        
-        setTimeout(() => {
-            resetGameUI();
-        }, 2000);
-    }
-
-    function resetGameUI() {
-        gameState = 'IDLE';
-        document.getElementById('multText').className = 'mult-number';
-        document.getElementById('multText').innerText = '1.00x';
-        document.getElementById('statusText').innerText = 'ГОТОВ К СТАРТУ';
-        document.getElementById('giftAlert').classList.remove('active');
-
-        const btn = document.getElementById('mainStartBtn');
-        btn.innerText = '🚀 Старт';
-        btn.className = 'btn-start';
-        rocketGroup.position.set(0,0,0);
-        flame.scale.set(1,1,1);
-    }
-
-    // HELPER BET BUTTONS
-    function halfBet() {
-        let el = document.getElementById('betAmount');
-        el.value = Math.max(25, Math.floor(parseInt(el.value) / 2));
-    }
-    function doubleBet() {
-        let el = document.getElementById('betAmount');
-        el.value = parseInt(el.value) * 2;
-    }
-
-    // --- ANIMATION LOOP (60 FPS 3D RENDER) ---
+    // ANIMATION LOOP
     function animate() {
         requestAnimationFrame(animate);
 
-        // Starfield background motion
-        const positions = starsGeo.attributes.position.array;
-        let speed = gameState === 'RUNNING' ? 0.3 + (multiplier * 0.1) : 0.03;
+        moonMesh.rotation.y += 0.005;
 
-        for(let i = 2; i < starsCount * 3; i += 3) {
-            positions[i] += speed;
-            if(positions[i] > 10) positions[i] = -30;
-        }
-        starsGeo.attributes.position.needsUpdate = true;
-
-        if (gameState === 'RUNNING') {
-            multiplier += 0.008 * (1 + multiplier * 0.1);
-            document.getElementById('multText').innerText = multiplier.toFixed(2) + 'x';
-
-            // Auto-cashout check
-            if (document.getElementById('autoToggle').checked) {
-                let autoX = parseFloat(document.getElementById('autoValue').value);
-                if (multiplier >= autoX) cashOut();
-            }
-
-            // Rocket motion 3D dynamics
-            rocketGroup.position.x = Math.sin(Date.now() * 0.005) * 0.2;
-            rocketGroup.position.y = Math.cos(Date.now() * 0.005) * 0.2;
-            flame.scale.set(1 + Math.random()*0.5, 1 + Math.random()*0.8, 1);
-
-            // Floating Gift Box passage
-            giftMesh.rotation.x += 0.02;
-            giftMesh.rotation.y += 0.02;
-            giftMesh.position.z += 0.1;
-
-            if (multiplier >= 2.0) {
-                document.getElementById('giftAlert').classList.add('active');
-            }
-
-            if (multiplier >= targetCrash) {
-                triggerCrash();
-            }
-        } else if (gameState === 'IDLE') {
-            // Smooth idle floating
-            rocketGroup.position.y = Math.sin(Date.now() * 0.002) * 0.15;
-            rocketGroup.rotation.z = -Math.PI / 4 + Math.sin(Date.now() * 0.003) * 0.05;
+        if(isFlying) {
+            multiplier += 0.008;
+            rocketGroup.position.x = Math.sin(Date.now() * 0.004) * 0.3;
+            rocketGroup.position.y = Math.cos(Date.now() * 0.004) * 0.2;
+            flameMesh.scale.set(1 + Math.random()*0.4, 1 + Math.random()*0.6, 1);
+            renderBetsList();
+        } else {
+            rocketGroup.position.y = Math.sin(Date.now() * 0.002) * 0.1;
         }
 
         renderer.render(scene, camera);
     }
-
     animate();
+    renderBetsList();
 
-    // Window Resize Handler
+    // MODAL & DEPOSIT TABS LOGIC
+    function toggleDepositModal() {
+        const modal = document.getElementById('depositModal');
+        modal.classList.toggle('active');
+        if(modal.classList.contains('active')) switchTab('stars');
+    }
+
+    function switchTab(tab) {
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(b => b.classList.remove('active'));
+        
+        const body = document.getElementById('modalBody');
+        if(tab === 'stars') {
+            buttons[1].classList.add('active');
+            body.innerHTML = `
+                <div class="deposit-card">
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:700;">Пополнить Звёздами</div>
+                    <div class="deposit-amount">200 ⭐</div>
+                    <div class="quick-amounts">
+                        <button class="q-btn">+ 500</button>
+                        <button class="q-btn">+ 2 000</button>
+                        <button class="q-btn">+ 5 000</button>
+                    </div>
+                </div>
+                <button class="btn-bet">Оплатить через Telegram</button>
+            `;
+        } else if(tab === 'gifts') {
+            buttons[2].classList.add('active');
+            let gridHTML = `<div style="font-weight:800; font-size:14px; margin-bottom:6px;">Доступные подарки для взноса:</div><div class="gifts-grid">`;
+            GIFTS_DATABASE.forEach(g => {
+                gridHTML += `
+                    <div class="gift-card">
+                        <div class="gift-icon">${g.icon}</div>
+                        <div class="gift-price">⭐ ${g.price}</div>
+                    </div>
+                `;
+            });
+            gridHTML += `</div>`;
+            body.innerHTML = gridHTML;
+        } else {
+            buttons[0].classList.add('active');
+            body.innerHTML = `
+                <div class="deposit-card">
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:700;">Web3 Оплата TON / GRAM</div>
+                    <div class="deposit-amount">10 GRAM</div>
+                </div>
+                <button class="btn-bet">Подключить кошелёк</button>
+            `;
+        }
+    }
+
     window.addEventListener('resize', () => {
         camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
